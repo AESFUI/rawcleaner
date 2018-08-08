@@ -4,14 +4,16 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Main {
+public class RawCleaner {
 
     public static void main(String[] args) {
 
         if (args.length == 0) {
-            rawDeleter("new-11"); //здесь будет разбор командной строки
+            System.out.println("Please, specify the path to directory for cleaning it.");
+            System.exit(0);
+        } else {
+            rawDeleter(args[0]); //здесь будет разбор командной строки
         }
-
     }
 
     /**
@@ -29,15 +31,20 @@ public class Main {
      * @param cr2FilesForDelete список cr2-Файлов из папки RAW
      */
     private static void deleteCr2Files(String path, List<File> cr2FilesForDelete) {
+        int countDeleted = 0;
+
         for (File file : cr2FilesForDelete) {
             String fileName = file.getName().substring(0, file.getName().length() - 3);
             File jpgFile = new File(path + "\\" + fileName + "jpg");
             File cr2File = new File(path + "\\RAW\\" + fileName + "cr2");
             if (!jpgFile.exists()) {
                 cr2File.delete();
+                countDeleted++;
                 System.out.println("File " + cr2File.getName() + " is deleted");
             }
         }
+
+        System.out.println(countDeleted + " files deleted.");
     }
 
     /**
@@ -51,7 +58,6 @@ public class Main {
 
         for (File dirOrFile : cr2Files) {
             if (dirOrFile.isFile() && dirOrFile.getName().toLowerCase().endsWith("cr2")) {
-
                 cr2FilesForDelete.add(dirOrFile);
                 System.out.println(dirOrFile.getName());
             }
